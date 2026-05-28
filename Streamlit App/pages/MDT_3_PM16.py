@@ -34,17 +34,174 @@ features_path = os.path.join(BASE_DIR,"models","PM16",grade,"features.pkl")
 model = joblib.load(model_path)
 features = joblib.load(features_path)
 
+# Import Dataframe
+data_dir = os.path.join(BASE_DIR, "..", "Data Final")
+pm16_toilet = pd.read_excel(os.path.join(data_dir, "Final_PM16-Toilet.xlsx"))
+pm16_towel = pd.read_excel(os.path.join(data_dir, "Final_PM16-Towel.xlsx"))
+pm16_facial = pd.read_excel(os.path.join(data_dir, "Final_PM16-Facial.xlsx"))
+
 # Feature Configuration
-feature_config = {
-    '% NBKP': {'min': 0.0,'max': 100.0, 'hard_max': 100, 'default': 0.0,'step': 1,'format': "%.2f"},
-    'Mean_Load KWH Tickling Refiner': {'min': 0.0,'max': 400.0,'default': 0.0,'step': 1,'format': "%.2f"},
-    'Mean_Creping': {'min': 0.0,'max': 40.0, 'hard_max': 100,'default': 0.0,'step': 1,'format': "%.2f"},
-    'Mean_Jet Wire Ratio': {'min': 0.0,'max': 1.0,'default': 0.0,'step': 0.01,'format': "%.2f"},
-    'GSM': {'min': 0.0,'max': 40.0,'default': 0.0,'step': 0.1,'format': "%.1f"},
-    'Mean_Flow Coating': {'default': 0.0,'step': 1,'format': "%.2f"},
-    'Mean_Flow Release': {'default': 1.0,'step': 1,'format': "%.2f"},
+feature_config_toilet = {
+    '% NBKP': {
+        'min': float(pm16_toilet['% NBKP'].min()),
+        'max': float(pm16_toilet['% NBKP'].max()),
+        'default': 0,
+        'step': 1.0,
+        'format': "%.2f"
+    },
+    'Mean_Load KWH Tickling Refiner': {
+        'min': float(pm16_toilet['Mean_Load KWH Tickling Refiner'].min()),
+        'max': float(pm16_toilet['Mean_Load KWH Tickling Refiner'].max()),
+        'default': 0,
+        'step': 1,
+        'format': "%.2f"},
+    'Mean_Creping': {
+        'min': float(pm16_toilet['Mean_Creping'].min()),
+        'max': float(pm16_toilet['Mean_Creping'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Jet Wire Ratio': {
+        'min': float(pm16_toilet['Mean_Jet Wire Ratio'].min()),
+        'max': float(pm16_toilet['Mean_Jet Wire Ratio'].max()),
+        'default': 0,
+        'step': 0.01,
+        'format': "%.2f"
+    },
+    'GSM': {
+        'min': float(pm16_toilet['GSM'].min()),
+        'max': float(pm16_toilet['GSM'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Flow Coating': {
+        'min': float(pm16_toilet['Mean_Flow Coating'].min()),
+        'max': float(pm16_toilet['Mean_Flow Coating'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Flow Release': {
+        'min': float(pm16_toilet['Mean_Flow Release'].min()),
+        'max': float(pm16_toilet['Mean_Flow Release'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
     'coating_release_ratio': {'min': 0.0,'max': 1.0}
 }
+feature_config_towel = {
+    '% NBKP': {
+        'min': float(pm16_towel['% NBKP'].min()),
+        'max': float(pm16_towel['% NBKP'].max()),
+        'default': 0,
+        'step': 1.0,
+        'format': "%.2f"
+    },
+    'Mean_Load KWH Tickling Refiner': {
+        'min': float(pm16_towel['Mean_Load KWH Tickling Refiner'].min()),
+        'max': float(pm16_towel['Mean_Load KWH Tickling Refiner'].max()),
+        'default': 0,
+        'step': 1,
+        'format': "%.2f"},
+    'Mean_Creping': {
+        'min': float(pm16_towel['Mean_Creping'].min()),
+        'max': float(pm16_towel['Mean_Creping'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Jet Wire Ratio': {
+        'min': float(pm16_towel['Mean_Jet Wire Ratio'].min()),
+        'max': float(pm16_towel['Mean_Jet Wire Ratio'].max()),
+        'default': 0,
+        'step': 0.01,
+        'format': "%.2f"
+    },
+    'GSM': {
+        'min': float(pm16_towel['GSM'].min()),
+        'max': float(pm16_towel['GSM'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Flow Coating': {
+        'min': float(pm16_towel['Mean_Flow Coating'].min()),
+        'max': float(pm16_towel['Mean_Flow Coating'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Flow Release': {
+        'min': float(pm16_towel['Mean_Flow Release'].min()),
+        'max': float(pm16_towel['Mean_Flow Release'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'coating_release_ratio': {'min': 0.0,'max': 1.0}
+}
+feature_config_facial = {
+    '% NBKP': {
+        'min': float(pm16_facial['% NBKP'].min()),
+        'max': float(pm16_facial['% NBKP'].max()),
+        'default': 0,
+        'step': 1.0,
+        'format': "%.2f"
+    },
+    'Mean_Load KWH Tickling Refiner': {
+        'min': float(pm16_facial['Mean_Load KWH Tickling Refiner'].min()),
+        'max': float(pm16_facial['Mean_Load KWH Tickling Refiner'].max()),
+        'default': 0,
+        'step': 1,
+        'format': "%.2f"},
+    'Mean_Creping': {
+        'min': float(pm16_facial['Mean_Creping'].min()),
+        'max': float(pm16_facial['Mean_Creping'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Jet Wire Ratio': {
+        'min': float(pm16_facial['Mean_Jet Wire Ratio'].min()),
+        'max': float(pm16_facial['Mean_Jet Wire Ratio'].max()),
+        'default': 0,
+        'step': 0.01,
+        'format': "%.2f"
+    },
+    'GSM': {
+        'min': float(pm16_facial['GSM'].min()),
+        'max': float(pm16_facial['GSM'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Flow Coating': {
+        'min': float(pm16_facial['Mean_Flow Coating'].min()),
+        'max': float(pm16_facial['Mean_Flow Coating'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'Mean_Flow Release': {
+        'min': float(pm16_facial['Mean_Flow Release'].min()),
+        'max': float(pm16_facial['Mean_Flow Release'].max()),
+        'default': 0,
+        'step': 0.1,
+        'format': "%.2f"
+    },
+    'coating_release_ratio': {'min': 0.0,'max': 1.0}
+}
+
+# Pilih Config Berdasarkan Grade
+if grade == "Toilet":
+    feature_config = feature_config_toilet
+elif grade == "Towel":
+    feature_config = feature_config_towel
+elif grade == "Facial":
+    feature_config = feature_config_facial
 
 # Feature labels
 feature_labels = {

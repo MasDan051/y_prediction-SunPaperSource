@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import os
 import json
+import statsmodels.api as sm
 
 st.title("Prediksi MDS PM15")
 
@@ -51,8 +52,8 @@ feature_config = {
         'min': 0.0,
         'max': 40.0,
         'default': 0.0,
-        'step': 0.1,
-        'format': "%.2f"
+        'step': 0.001,
+        'format': "%.3f"
     }
 }
 
@@ -152,11 +153,9 @@ if reset_button:
 
 # Prediction
 if predict_button:
-
     df = pd.DataFrame([input_data])
-
+    df = sm.add_constant(df, has_constant='add')
     prediction = model.predict(df)[0]
-
     st.success(
-        f"Hasil Prediksi MDS PM15: {prediction:.2f}"
+        f"Hasil Prediksi MDS PM15: {prediction:.3f}"
     )

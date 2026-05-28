@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import os
 import json
+import statsmodels.api as sm
 
 st.title("Prediksi MDS PM14")
 
@@ -47,20 +48,38 @@ features = joblib.load(features_path)
 
 # Feature Configuration
 feature_config = {
+
     'Mean_Creping': {
         'min': 0.0,
         'max': 40.0,
         'default': 0.0,
-        'step': 0.1,
-        'format': "%.2f"
+        'step': 0.001,
+        'format': "%.3f"
+    },
+
+    '% NBKP': {
+        'min': 0.0,
+        'max': 100.0,
+        'default': 0.0,
+        'step': 0.001,
+        'format': "%.3f"
+    },
+
+    'GSM': {
+        'min': 0.0,
+        'max': 50.0,
+        'default': 0.0,
+        'step': 1.0,
+        'format': "%.1f"
     }
 }
 
 # Feature Labels
 feature_labels = {
-    'Mean_Creping': 'Creping'
+    'Mean_Creping': 'Creping',
+    '% NBKP': 'NBKP (%)',
+    'GSM': 'GSM'
 }
-
 # Default Session State
 for feature in feature_config:
 
@@ -78,7 +97,12 @@ input_data = {}
 
 for feature in features:
 
-    config = feature_config[feature]
+    config = feature_config.get(feature)
+    if config is None:
+        st.error(
+            f"Feature '{feature}' belum ada di feature_config"
+        )
+        st.stop()
 
     input_data[feature] = st.number_input(
         label=feature_labels.get(feature, feature),
@@ -152,11 +176,10 @@ if reset_button:
 
 # Prediction
 if predict_button:
-
     df = pd.DataFrame([input_data])
-
+    df = df[features]
+    df = sm.add_constant(df, has_constant='add')
     prediction = model.predict(df)[0]
-
     st.success(
-        f"Hasil Prediksi MDS PM14: {prediction:.2f}"
+        f"Hasil Prediksi MDS PM14: {prediction:.3f}"
     )
