@@ -46,30 +46,36 @@ features_path = os.path.join(
 model = joblib.load(model_path)
 features = joblib.load(features_path)
 
+# Load Training Data
+data_dir = os.path.join(BASE_DIR, "..", "Data Final")
+pm14_mds = pd.read_excel(
+    os.path.join(data_dir, "Final_PM14.xlsx")
+)
+
 # Feature Configuration
 feature_config = {
 
     'Mean_Creping': {
-        'min': 0.0,
-        'max': 40.0,
-        'default': 0.0,
+        'min': float(pm14_mds['Mean_Creping'].min()),
+        'max': float(pm14_mds['Mean_Creping'].max()),
+        'default': 0,
         'step': 0.001,
         'format': "%.3f"
     },
 
     '% NBKP': {
-        'min': 0.0,
-        'max': 100.0,
-        'default': 0.0,
+        'min': float(pm14_mds['% NBKP'].min()),
+        'max': float(pm14_mds['% NBKP'].max()),
+        'default': 0,
         'step': 0.001,
         'format': "%.3f"
     },
 
     'GSM': {
-        'min': 0.0,
-        'max': 50.0,
-        'default': 0.0,
-        'step': 1.0,
+        'min': float(pm14_mds['GSM'].min()),
+        'max': float(pm14_mds['GSM'].max()),
+        'default': 0,
+        'step': 0.1,
         'format': "%.1f"
     }
 }
@@ -109,6 +115,12 @@ for feature in features:
 
         min_value=0.0,
 
+        max_value=(
+            float(config['hard_max'])
+            if 'hard_max' in config
+            else None
+        ),
+
         step=float(config['step']),
 
         value=float(
@@ -129,13 +141,15 @@ for feature in features:
     )
 
     # Warning outlier
-    if (
-        input_data[feature] < config['min']
-        or
-        input_data[feature] > config['max']
-    ):
+    if 'min' in config:
 
-        st.warning(
+        if (
+            input_data[feature] < config['min']
+            or
+            input_data[feature] > config['max']
+        ):
+
+            st.warning(
             f"⚠️ Nilai '{feature_labels.get(feature, feature)}' "
             f"berada di luar data histori pelatihan model "
             f"({config['min']} - {config['max']}). "

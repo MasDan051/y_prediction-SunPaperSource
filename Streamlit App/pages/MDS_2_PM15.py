@@ -46,11 +46,22 @@ features_path = os.path.join(
 model = joblib.load(model_path)
 features = joblib.load(features_path)
 
+# Load Training Data
+data_dir = os.path.join(BASE_DIR, "..", "Data Final")
+
+pm15_mds = pd.read_excel(
+    os.path.join(data_dir, "Final_PM15-1.xlsx")
+)
+
+# Feature Configuration
 # Feature Configuration
 feature_config = {
+
     'Mean_Creping': {
-        'min': 0.0,
-        'max': 40.0,
+        'min': round(
+            float(pm15_mds['Mean_Creping'].min()),3),
+        'max': round(
+            float(pm15_mds['Mean_Creping'].max()),3),
         'default': 0.0,
         'step': 0.001,
         'format': "%.3f"
@@ -79,13 +90,21 @@ input_data = {}
 
 for feature in features:
 
-    config = feature_config[feature]
+    config = feature_config.get(feature)
+
+    if config is None:
+        st.error(f"Feature '{feature}' belum ada di feature_config")
+        st.stop()
 
     input_data[feature] = st.number_input(
         label=feature_labels.get(feature, feature),
 
         min_value=0.0,
-
+        max_value=(
+            float(config['hard_max'])
+            if 'hard_max' in config
+            else None
+        ),
         step=float(config['step']),
 
         value=float(
@@ -106,10 +125,13 @@ for feature in features:
     )
 
     # Warning outlier
+    tolerance = 1e-6
     if (
-        input_data[feature] < config['min']
+        input_data[feature]
+        < config['min'] - tolerance
         or
-        input_data[feature] > config['max']
+        input_data[feature]
+        > config['max'] + tolerance
     ):
 
         st.warning(
@@ -154,6 +176,7 @@ if reset_button:
 # Prediction
 if predict_button:
     df = pd.DataFrame([input_data])
+    df = df[features]
     df = sm.add_constant(df, has_constant='add')
     prediction = model.predict(df)[0]
     st.success(
