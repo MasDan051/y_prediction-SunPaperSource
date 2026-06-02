@@ -11,6 +11,8 @@ grade = st.selectbox(
     ["Toilet"]  # Sesuaikan dengan file yang tersedia
 )
 
+st.caption("Percentage of Error (Average) = 4.1%")
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 state_dir = os.path.join(BASE_DIR, "state")
 os.makedirs(state_dir, exist_ok=True)

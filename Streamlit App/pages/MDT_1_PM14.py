@@ -32,6 +32,7 @@ features = joblib.load(features_path)
 data_dir = os.path.join(BASE_DIR, "..", "Data Final")
 
 if grade == "Toilet":
+    st.caption("Percentage of Error (Average) = 4.1%")
     pm14_toilet = pd.read_excel(
         os.path.join(data_dir, "Final_PM14-Toilet.xlsx")
     )
@@ -98,6 +99,7 @@ if grade == "Toilet":
     feature_config = feature_config_toilet
 
 elif grade == "Facial":
+    st.caption("Percentage of Error (Average) = 4.1%")
     pm14_facial = pd.read_excel(
         os.path.join(data_dir, "Final_PM14-Facial.xlsx")
     )
@@ -164,6 +166,7 @@ elif grade == "Facial":
     feature_config = feature_config_facial
 
 elif grade == "Towel":
+    st.caption("Percentage of Error (Average) = 4.1%")
     pm14_towel = pd.read_excel(
         os.path.join(data_dir, "Final_PM14-Towel.xlsx")
     )

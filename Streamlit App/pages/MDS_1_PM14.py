@@ -6,7 +6,7 @@ import json
 import statsmodels.api as sm
 
 st.title("Prediksi MDS PM14")
-
+st.caption("Percentage of Error (Average) = 8.69%")
 # Base Directory
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
